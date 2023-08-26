@@ -1,10 +1,11 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
+import sys
 
 
 def main():
-    # Load the processed data into a pandas dataframe
-    df = pd.read_csv('/data/processed_data.zip')
+    # Load the processed data into a pandas dataframe and drop the (single) nan row
+    df = pd.read_csv('data/processed_data.zip').dropna(subset='Text')
 
     # Split the data into training and testing datasets
     X_train, X_test, y_train, y_test = train_test_split(df.Text, df.Label, test_size=0.3, shuffle=True, random_state=1)

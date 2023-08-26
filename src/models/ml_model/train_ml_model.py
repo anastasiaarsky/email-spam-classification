@@ -22,13 +22,13 @@ def main():
     #
     # Use the default Random Forest Classifier since RandomizedSearchCV
     # produced worse results compared to the default
-    classifier = RandomForestClassifier()
+    rf = RandomForestClassifier()
 
     # Fit the training dataset on the classifier
-    classifier.fit(X_train_vec, y_train)
+    rf.fit(X_train_vec, y_train)
 
     # Predict the labels on validation dataset
-    y_pred = classifier.predict(X_val_vec)
+    y_pred = rf.predict(X_val_vec)
 
     # Print metrics results
     calculate_metrics(y_val, y_pred)

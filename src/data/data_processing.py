@@ -1,5 +1,7 @@
 from src.data import data_collection
+
 import logging
+import numpy as np
 import re
 import unicodedata
 
@@ -99,7 +101,7 @@ def main():
 
     # Step 10: Save the data to a zipped CSV file
     compression_opts = dict(method='zip', archive_name='processed_data.csv')
-    clean_df.to_csv('/data/processed_data.zip', index=False, compression=compression_opts)
+    clean_df.to_csv('data/processed_data.zip', index=False, escapechar='\\', compression=compression_opts)
 
     logging.info('Finished data processing, processed data can be found at data/processed_data.csv.zip')
 

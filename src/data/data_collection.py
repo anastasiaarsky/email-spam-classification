@@ -2,24 +2,29 @@ import logging
 import pandas as pd
 import zipfile
 
+from email.parser import Parser
+
 
 # Reads the raw email data
-# Input: path and a boolean, Output: pandas datafram
+# Input: path and a boolean, Output: pandas dataframe
 def read_emails(path, spam):
     df = pd.DataFrame(columns=['Text', 'Label'])
     with zipfile.ZipFile(path, 'r') as zip:
+        # Iterate through zipped files
         for file in zip.namelist():
-            f = zip.open(file)
-            subject_found = False
-            text = ''
-            for line in f.readlines():
-                line = line.decode('latin-1')
-                if subject_found:
-                    text += line
-                else:
-                    if line.startswith('Subject:'):
-                        subject_found = True
-                        text += line.replace('Subject:', '')
+            f = zip.read(file).decode('latin-1')
+            # Pass the file to an email parser
+            email = Parser().parsestr(f)
+            # Get email subject
+            subject = email.get('Subject')
+            # Get email body
+            body = str(email.get_payload())
+            # Combine subject and body into the text variable
+            if subject is not None:
+                text = subject + '/n' + body
+            else:
+                text = body
+            # Append text and label to dataframe
             if spam:
                 df.loc[len(df.index)] = [text, 1]
             else:
@@ -28,12 +33,10 @@ def read_emails(path, spam):
 
 
 # Reads and processes the SpamAssassin data
-# Input: paths to the ham, hard ham, and spam files, Output: pandas dataframe
+# Input: paths to the ham and spam files, Output: pandas dataframe
 def process_spam_assassin(ham_path, spam_path):
-    # Create dataframes using the read_emails() method for the (easy) ham emails,
-    # the hard ham emails, and the spam emails
+    # Create dataframes using the read_emails() method for the ham emails and spam emails
     ham_df = read_emails(ham_path, False)
-    # hard_ham_df = read_emails(hard_ham_path, False)
     spam_df = read_emails(spam_path, True)
 
     # Concatenate the previous dataframes:
@@ -61,12 +64,12 @@ def main():
     logging.info('Started data collection')
 
     # Step 1: Process SpamAssassin data
-    ham_path = '/data/external_data/spam_assassin/ham.zip'
-    spam_path = '/data/external_data/spam_assassin/spam.zip'
+    ham_path = 'data/external_data/spam_assassin/ham.zip'
+    spam_path = 'data/external_data/spam_assassin/spam.zip'
     sa_df = process_spam_assassin(ham_path, spam_path)
 
     # Step 2: Process Enron Spam data
-    enron_path = '/data/external_data/enron_spam.zip'
+    enron_path = 'data/external_data/enron_spam.zip'
     enron_df = process_enron(enron_path)
 
     # Step 3: Merge the SpamAssassin df with the Enron df
@@ -74,7 +77,7 @@ def main():
 
     # Step 4: Save the data to a zipped CSV file
     compression_opts = dict(method='zip', archive_name='unprocessed_data.csv')
-    data.to_csv('/data/raw_data.zip', index=False, compression=compression_opts)
+    data.to_csv('data/raw_data.zip', index=False,  escapechar='\\', compression=compression_opts)
 
     logging.info('Finished data collection, unprocessed data can be found at data/raw_data.csv.zip')
 

@@ -1,5 +1,7 @@
 from src.features import train_valid_test_split
 
+import pandas as pd
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
@@ -22,8 +24,8 @@ def main(train=True):
     # if predicting -> fit the tf-idf vectorizer on the combined training and validation data (X_train_full), then use
     # it to transform the full training dataset and the testing dataset
     else:
-        X_train_full = X_train.append(X_val, ignore_index=True)
-        y_train_full = y_train.append(y_val, ignore_index=True)
+        X_train_full = pd.concat([X_train, X_val])
+        y_train_full = pd.concat([y_train, y_val])
         vec.fit(X_train_full)
         X_train_full_vec = vec.transform(X_train_full)
         X_test_vec = vec.transform(X_test)
