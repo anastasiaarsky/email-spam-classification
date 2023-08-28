@@ -4,37 +4,37 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 
-def main(train=True):
-    # Load the processed data into a pandas dataframe and drop the (single) nan row
+def main():
+    print('Starting to build features...')
+    # Step 1: Load the processed data into a pandas dataframe and drop the (single) nan row
     df = pd.read_csv('data/processed_data.zip').dropna(subset='Text')
 
-    # Split the data into training and testing datasets
-    X_train, X_test, y_train, y_test = train_test_split(df.Text, df.Label, test_size=0.3, shuffle=True, random_state=1)
-
-    # Word_level TF-IDF
+    # Step 2: Create the word_level TF-IDF vectorizer
     vec = TfidfVectorizer()
 
-    # if training -> only fit the tf-idf vectorizer on the training data, then use it to transform the training dataset
-    # and the validation dataset
-    if train:
-        # Fit the vectorizer on the training data
-        vec.fit(X_train)
-        # Split the training dataset into training and validation datasets and do tf-idf transformation
-        X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, shuffle=True, random_state=1)
-        X_train_vec = vec.transform(X_train)
-        X_val_vec = vec.transform(X_val)
-        print("Shape of Vectorized Training Set: {}, \nShape of Vectorized Validation Set: {}"
-              .format(X_train_vec.shape, X_val_vec.shape))
-        return X_train_vec, y_train, X_val_vec, y_val
-    # if predicting -> fit the tf-idf vectorizer on the combined training and validation data (X_train_full), then use
-    # it to transform the full training dataset and the testing dataset
-    else:
-        vec.fit(X_train)
-        X_train_full_vec = vec.transform(X_train)
-        X_test_vec = vec.transform(X_test)
-        print("Shape of Vectorized Training Set: {}, \nShape of Vectorized Testing Set: {}"
-              .format(X_train_full_vec.shape, X_test_vec.shape))
-        return X_train_full_vec, y_train, X_test_vec, y_test
+    # Step 3 & 4: Split the data using the 70-15-15 rule (70% training : 15% validation : 15% testing) and
+    # fit the vectorizer on the training (and validation) data
+    #
+    # first, split the data into training and testing datasets
+    X_train, X_test, y_train, y_test = train_test_split(df.Text, df.Label, test_size=0.15, shuffle=True,
+                                                        random_state=1)
+    # fit the vectorizer on the training data
+    vec.fit(X_train)
+    # split the training dataset into training and validation datasets
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, shuffle=True, random_state=1)
+
+    # Step 5: Transform the training, validation, and testing datasets using the fitted vectorizer
+    X_train_vec = vec.transform(X_train)
+    X_val_vec = vec.transform(X_val)
+    X_test_vec = vec.transform(X_test)
+    print('TF-IDF vectorization on training, validation, and testing sets completed')
+    print('\tNumber of training samples: {:,}'.format(X_train_vec.shape[0]))
+    print('\tNumber of validation samples: {:,}'.format(X_val_vec.shape[0]))
+    print('\tNumber of testing samples: {:,}'.format(X_test_vec.shape[0]))
+    print('\tNumber of features (unique words in the corpus): {:,}'.format(X_train_vec.shape[1]))
+    print('Feature building completed')
+
+    return X_train_vec, y_train, X_val_vec, y_val, X_test_vec, y_test
 
 
 if __name__ == "__main__":
