@@ -1,34 +1,16 @@
 from src.features import build_ml_features
+from src.models.evaluation_metrics import calculate_metrics, print_custom_confusion_matrix
+
 
 import argparse
 import joblib
 
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, confusion_matrix
-
-
-# Function to print metrics results
-def calculate_metrics(y_true, y_pred):
-    print("\tTest accuracy: {:.3f}".format(accuracy_score(y_true, y_pred) * 100))
-    print("\tF1 Score: {:.3f}".format(f1_score(y_true, y_pred, average='macro') * 100))
-    print("\tRecall: {:.3f}".format(recall_score(y_true, y_pred, average='macro') * 100))
-    print("\tPrecision: {:.3f}".format(precision_score(y_true, y_pred, average='macro') * 100))
-
-
-# Function to print a custom confusion matrix with added labels
-def print_custom_confusion_matrix(y_true, y_pred):
-    labels = ['True Negative', 'Predicted Positive', 'Actual Negative', 'Actual Positive']
-    cm = confusion_matrix(y_true, y_pred)
-
-    print('\tConfusion Matrix:')
-    print("\t{:20} {:^20} {:^20}".format("", labels[0], labels[1]))
-    print("\t{:20} {:^20} {:^20}".format(labels[2], cm[0, 0], cm[0, 1]))
-    print("\t{:20} {:^20} {:^20}".format(labels[3], cm[1, 0], cm[1, 1]))
 
 
 def main(train=True):
     # Step 1: Get training flag (if applicable)
-    parser = argparse.ArgumentParser(description="Train a model")
+    parser = argparse.ArgumentParser(description='Train a model')
     parser.add_argument('-t', '--train', action='store_true', help='Flag to indicate training')
     args = parser.parse_args()
 
@@ -52,7 +34,7 @@ def main(train=True):
         y_pred = rf.predict(X_val_vec)
 
         # Step 6: Print metrics results
-        print("Evaluation Results on the Validation Set: ")
+        print('Evaluation Results on the Validation Set:')
         calculate_metrics(y_val, y_pred)
 
         print('Model training completed')
@@ -66,7 +48,7 @@ def main(train=True):
     y_pred = rf.predict(X_test_vec)
 
     # Step 5: Print metrics results
-    print("Random Forest Prediction Results on the Testing Set:")
+    print('Random Forest Prediction Results on the Testing Set:')
     calculate_metrics(y_test, y_pred)
 
     # Step 6: Print confusion matrix
