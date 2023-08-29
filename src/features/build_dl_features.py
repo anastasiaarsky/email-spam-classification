@@ -58,8 +58,7 @@ def load_pretrained_embeddings(word_to_index, vocab_size, embed_size):
     return embedding_matrix
 
 
-def main():
-    print('Starting to build features...')
+def main(predict=False):
     # Step 1: Load the processed data into a pandas dataframe and drop the (single) nan row
     df = pd.read_csv('data/processed_data.zip').dropna(subset='Text')
 
@@ -72,35 +71,42 @@ def main():
     # call vectorize_data and get the vectorized training and testing sets, along with a word_to_index dict for the
     # training set
     X_train_vec, X_test_vec, word_to_index = vectorize_data(X_train, X_test, max_len)
-    print('Vectorization on training, validation, and testing sets completed')
 
-    # Step 4: Split the training dataset into training and validation datasets (80:20 to follow 70:15:15 rule)
-    X_train_vec, X_val_vec, y_train, y_val = train_test_split(X_train_vec, y_train, test_size=0.2, shuffle=True,
-                                                              random_state=1)
-    print('\tNumber of training samples: {:,}'.format(X_train_vec.shape[0]))
-    print('\tNumber of validation samples: {:,}'.format(X_val_vec.shape[0]))
-    print('\tNumber of testing samples: {:,}'.format(X_test_vec.shape[0]))
+    # if simply predicting, stop here and return the vectorized testing set
+    if predict:
+        return X_test_vec, y_test
 
-    # Step 5: Find embedding for every word in the training and validation datasets
-    # vocab_size is the number of unique words in the training and validation sets
-    vocab_size = len(word_to_index) + 1
-    print('\tSize of vocabulary (unique words in the corpus): {:,}'.format(vocab_size))
-    # embed_size is the size of embeddings (i.e. the length of the vectors that represent each unique word)
-    embed_size = 300
-    # call load_pretrained_embeddings and get an embedding matrix, where each unique word in the training & validation
-    # sets is represented by a vector
-    ft_embeddings = load_pretrained_embeddings(word_to_index, vocab_size, embed_size)
+    # if training, continue to build the features
+    else:
+        print('Starting to build features...')
 
-    # Step 6: Create the embedding layer
-    embedding_layer_ft = Embedding(input_dim=vocab_size,
-                                   output_dim=embed_size,
-                                   input_length=max_len,
-                                   weights=[ft_embeddings],
-                                   trainable=True)
-    print('FastText embedding layer created')
-    print('Feature building completed')
+        # Step 4: Split the training dataset into training and validation datasets (80:20 to follow 70:15:15 rule)
+        X_train_vec, X_val_vec, y_train, y_val = train_test_split(X_train_vec, y_train, test_size=0.2, shuffle=True,
+                                                                  random_state=1)
+        print('\tNumber of training samples: {:,}'.format(X_train_vec.shape[0]))
+        print('\tNumber of validation samples: {:,}'.format(X_val_vec.shape[0]))
+        print('\tNumber of testing samples: {:,}'.format(X_test_vec.shape[0]))
 
-    return X_train_vec, y_train, X_val_vec, y_val, X_test_vec, y_test, embedding_layer_ft
+        # Step 5: Find embedding for every word in the training and validation datasets
+        # vocab_size is the number of unique words in the training and validation sets
+        vocab_size = len(word_to_index) + 1
+        print('\tSize of vocabulary (unique words in the corpus): {:,}'.format(vocab_size))
+        # embed_size is the size of embeddings (i.e. the length of the vectors that represent each unique word)
+        embed_size = 300
+        # call load_pretrained_embeddings and get an embedding matrix, where each unique word in the training &
+        # validation sets is represented by a vector
+        ft_embeddings = load_pretrained_embeddings(word_to_index, vocab_size, embed_size)
+
+        # Step 6: Create the embedding layer
+        embedding_layer = Embedding(input_dim=vocab_size,
+                                    output_dim=embed_size,
+                                    input_length=max_len,
+                                    weights=[ft_embeddings],
+                                    trainable=True)
+        print('FastText embedding layer created')
+        print('Feature building completed')
+
+        return X_train_vec, y_train, X_val_vec, y_val, embedding_layer
 
 
 if __name__ == "__main__":
