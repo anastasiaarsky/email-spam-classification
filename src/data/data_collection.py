@@ -1,4 +1,4 @@
-import logging
+import os
 import pandas as pd
 import zipfile
 
@@ -61,25 +61,24 @@ def process_enron(enron_path):
 
 
 def main():
-    logging.info('Started data collection')
-
     # Step 1: Process SpamAssassin data
-    ham_path = 'data/external_data/spam_assassin/ham.zip'
-    spam_path = 'data/external_data/spam_assassin/spam.zip'
+    ham_path = os.path.join(os.path.dirname(__file__), '../../data/external_data/spam_assassin/ham.zip')
+    spam_path = os.path.join(os.path.dirname(__file__), '../../data/external_data/spam_assassin/spam.zip')
     sa_df = process_spam_assassin(ham_path, spam_path)
 
     # Step 2: Process Enron Spam data
-    enron_path = 'data/external_data/enron_spam.zip'
+    enron_path = os.path.join(os.path.dirname(__file__), '../../data/external_data/enron_spam.zip')
     enron_df = process_enron(enron_path)
 
     # Step 3: Merge the SpamAssassin df with the Enron df
     data = pd.concat([sa_df, enron_df], axis=0, ignore_index=True)
 
     # Step 4: Save the data to a zipped CSV file
+    output_path = os.path.join(os.path.dirname(__file__), '../../data/raw_data.zip')
     compression_opts = dict(method='zip', archive_name='unprocessed_data.csv')
-    data.to_csv('data/raw_data.zip', index=False,  escapechar='\\', compression=compression_opts)
+    data.to_csv(output_path, index=False,  escapechar='\\', compression=compression_opts)
 
-    logging.info('Finished data collection, unprocessed data can be found at data/raw_data.csv.zip')
+    print('Finished data collection, unprocessed data can be found at data/raw_data.csv.zip')
 
     # Step 5: Return the data dataframe
     return data

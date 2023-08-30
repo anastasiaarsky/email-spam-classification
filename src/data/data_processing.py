@@ -1,7 +1,6 @@
-from src.data import data_collection
+import data_collection
 
-import logging
-import numpy as np
+import os
 import re
 import unicodedata
 
@@ -68,8 +67,6 @@ def remove_extra_space(text):
 
 
 def main():
-    logging.info('Started data processing')
-
     # Step 1: Get data from data_collection module
     # Full Text column
     df = data_collection.main()
@@ -100,10 +97,11 @@ def main():
     clean_df.rename(columns={'Clean_Text': 'Text'}, inplace=True)
 
     # Step 10: Save the data to a zipped CSV file
+    output_path = os.path.join(os.path.dirname(__file__), '../../data/processed_data.zip')
     compression_opts = dict(method='zip', archive_name='processed_data.csv')
-    clean_df.to_csv('data/processed_data.zip', index=False, escapechar='\\', compression=compression_opts)
+    clean_df.to_csv(output_path, index=False, escapechar='\\', compression=compression_opts)
 
-    logging.info('Finished data processing, processed data can be found at data/processed_data.csv.zip')
+    print('Finished data processing, processed data can be found at data/processed_data.csv.zip')
 
     # Step 11: Return the clean dataframe
     return clean_df
