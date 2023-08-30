@@ -15,7 +15,7 @@ Furthermore, spam is rapidly on the rise, with the Federal Trade Commission repo
 3. **Word Embedding**: Convert text into dense vector representations suitable for NLP tasks using pretrained FastText word embeddings for the DL model.
 4. **Text Classification**: Implement text classification models (one ML and one DL) to categorize email text as spam or not spam.
    - ML model: Random Forest Classifier
-   - DL model: Convolutional Neural Network (CNN).
+   - DL model: Convolutional Neural Network (CNN)
 
 ## Usage
 
@@ -24,17 +24,17 @@ Terminal: ```python src/data/make_dataset.py```
 The preprocessed data will be saved in as a zipped CSV file, located at data/processed_data.zip.
 
 To train the **Random Forest** model (with **TF-IDF** feature extraction):  
-Terminal: ```python src/models/rf_model.py -train```  
-The saved model can be found at models/random_forest_model.joblib. To later load and reuse the trained model without having to retrain it, import the joblib library and use the load method. Additionally, evaluation metrics and a confusion matrix will be printed for the validation set.
+Terminal: ```python -m src.models.rf_model --train```  
+The saved model can be found at models/random_forest_model.joblib. Additionally, evaluation metrics and a confusion matrix will be printed for the validation set.
 
-To predict using the trained **Random Forest** model, run:  
-Terminal: ```python src/models/rf_model.py```  
+To predict once the **Random Forest** model has been trained and saved, run:  
+Terminal: ```python -m src.models.rf_model```  
 This will perform TF-IDF feature extraction on the testing set and use the saved trained RF model for predictions. Evaluation metrics and a confusion matrix will be printed for the testing set.
 
 To train the **CNN** model (using **FastText** pretrained word embeddings), run:  
-Terminal: ```python src/models/train_cnn_model.py```  
+Terminal: ```python -m src.models.cnn_model --train```  
 The saved model can be found at models/cnn_model.h5. To later load and reuse the trained model without having to retrain it, import the keras library and use the keras.models.load_model method. Additionally, evaluation metrics and a confusion matrix will be printed for the validation set.
 
 To predict using the trained **CNN** model, run:  
-Terminal: ```python src/models/predict_cnn_model.py```  
+Terminal: ```python -m src.models.cnn_model```  
 This will utilize FastText word embeddings on the testing set and use the saved trained CNN model for predictions. Evaluation metrics and a confusion matrix will be printed for the testing set.
