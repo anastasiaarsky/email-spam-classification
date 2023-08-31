@@ -34,11 +34,11 @@ def vectorize_data(X_train, X_test, max_len):
 
 # Input: dictionary of unique words and indexes (from the training set), num unique words, size of embeddings (300)
 # Output: an embedding matrix where each unique word in the training set is represented by a vector of size 300
-def load_pretrained_embeddings(word_to_index, vocab_size, embed_size):
+def load_pretrained_embeddings(word_to_index, vocab_size, embed_size, path_to_embeddings):
     def get_coefs(word, *arr):
         return word, np.asarray(arr, dtype='float32')
 
-    with zipfile.ZipFile('data/external_data/wiki-news-300d-1M-subword.vec.zip', 'r') as z:
+    with zipfile.ZipFile(path_to_embeddings, 'r') as z:
         embeddings_index = dict(get_coefs(*row.decode('utf8').split(" "))
                                 for row in z.open('wiki-news-300d-1M-subword.vec')
                                 if len(row) > 100)
@@ -58,7 +58,7 @@ def load_pretrained_embeddings(word_to_index, vocab_size, embed_size):
     return embedding_matrix
 
 
-def main(predict=False):
+def glove(predict=False):
     # Step 1: Load the processed data into a pandas dataframe and drop the (single) nan row
     df = pd.read_csv('data/processed_data.zip').dropna(subset='Text')
 
@@ -74,28 +74,29 @@ def main(predict=False):
 
     # if simply predicting, stop here and return the vectorized testing set
     if predict:
+        print('Vectorization on testing set completed')
         return X_test_vec, y_test
 
     # if training, continue to build the features
     else:
-        print('Starting to build features...')
-
+        print('Vectorization on training and validation sets completed')
         # Step 4: Split the training dataset into training and validation datasets (80:20 to follow 70:15:15 rule)
         X_train_vec, X_val_vec, y_train, y_val = train_test_split(X_train_vec, y_train, test_size=0.2, shuffle=True,
                                                                   random_state=1)
-        print('\tNumber of training samples: {:,}'.format(X_train_vec.shape[0]))
-        print('\tNumber of validation samples: {:,}'.format(X_val_vec.shape[0]))
-        print('\tNumber of testing samples: {:,}'.format(X_test_vec.shape[0]))
+        # print('\tNumber of training samples: {:,}'.format(X_train_vec.shape[0]))
+        # print('\tNumber of validation samples: {:,}'.format(X_val_vec.shape[0]))
+        # print('\tNumber of testing samples: {:,}'.format(X_test_vec.shape[0]))
 
         # Step 5: Find embedding for every word in the training and validation datasets
         # vocab_size is the number of unique words in the training and validation sets
         vocab_size = len(word_to_index) + 1
-        print('\tSize of vocabulary (unique words in the corpus): {:,}'.format(vocab_size))
+        # print('\tSize of vocabulary (unique words in the corpus): {:,}'.format(vocab_size))
         # embed_size is the size of embeddings (i.e. the length of the vectors that represent each unique word)
         embed_size = 300
+        path_to_embeddings = 'data/external_data/wiki-news-300d-1M-subword.vec.zip'
         # call load_pretrained_embeddings and get an embedding matrix, where each unique word in the training &
         # validation sets is represented by a vector
-        ft_embeddings = load_pretrained_embeddings(word_to_index, vocab_size, embed_size)
+        ft_embeddings = load_pretrained_embeddings(word_to_index, vocab_size, embed_size, path_to_embeddings)
 
         # Step 6: Create the embedding layer
         embedding_layer = Embedding(input_dim=vocab_size,
@@ -104,10 +105,9 @@ def main(predict=False):
                                     weights=[ft_embeddings],
                                     trainable=True)
         print('FastText embedding layer created')
-        print('Feature building completed')
 
         return X_train_vec, y_train, X_val_vec, y_val, embedding_layer
 
 
 if __name__ == "__main__":
-    main()
+    glove()

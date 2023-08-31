@@ -21,20 +21,22 @@ Furthermore, spam is rapidly on the rise, with the Federal Trade Commission repo
 
 To collect and **preprocess the data**, run:  
 Terminal: ```python src/data/make_dataset.py```  
-The preprocessed data will be saved in as a zipped CSV file, located at data/processed_data.zip.
+The preprocessed data will be saved in as a zipped CSV file, located at data/processed_data.zip. The raw data will also be saved in data/raw_data.zip.
 
 To train the **Random Forest** model (with **TF-IDF** feature extraction):  
 Terminal: ```python -m src.models.rf_model --train```  
-The saved model can be found at models/random_forest_model.joblib. Additionally, evaluation metrics and a confusion matrix will be printed for the validation set.
+This will perform TF-IDF feature extraction on the training and validation sets and use the training set to train the model. 
+The model will be saved in models/random_forest_model.joblib. 
+Evaluation metrics and a confusion matrix will be printed for the validation set.
 
 To predict once the **Random Forest** model has been trained and saved, run:  
 Terminal: ```python -m src.models.rf_model```  
-This will perform TF-IDF feature extraction on the testing set and use the saved trained RF model for predictions. Evaluation metrics and a confusion matrix will be printed for the testing set.
+This will perform TF-IDF feature extraction on the testing set and use the trained RF model that was previously saved for predictions. Evaluation metrics and a confusion matrix will be printed for the testing set.
 
 To train the **CNN** model (using **FastText** pretrained word embeddings), run:  
 Terminal: ```python -m src.models.cnn_model --train```  
-The saved model can be found at models/cnn_model.h5. To later load and reuse the trained model without having to retrain it, import the keras library and use the keras.models.load_model method. Additionally, evaluation metrics and a confusion matrix will be printed for the validation set.
+This will first vectorize the training and validation sets and use them to create an embedding layer for the CNN. Then the CNN will be trained and saved at models/cnn_model.h5. 
 
 To predict using the trained **CNN** model, run:  
 Terminal: ```python -m src.models.cnn_model```  
-This will utilize FastText word embeddings on the testing set and use the saved trained CNN model for predictions. Evaluation metrics and a confusion matrix will be printed for the testing set.
+This will vectorize the testing set and use the saved trained CNN model for predictions. Evaluation metrics and a confusion matrix will be printed for the testing set.
