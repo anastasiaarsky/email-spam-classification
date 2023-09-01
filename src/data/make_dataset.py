@@ -1,4 +1,4 @@
-import data_processing
+from src.data import data_processing
 
 
 def main():

@@ -40,7 +40,7 @@ cd production_repo
 
 2. Collect and preprocess the data:  
 ```bash 
-python src/data/make_dataset.py
+python -m src.data.make_dataset
 ```
 - The preprocessed data will be saved in as a zipped CSV file, located at data/processed_data.zip. 
 - The raw data will also be saved in data/raw_data.zip.
@@ -79,11 +79,11 @@ python src/data/make_dataset.py
 
 ## Results
 
-Though my CNN model that leveraged FastText word embeddings took slightly more CPU time to train (3 min 23 s) compared to the simple Random Forest model (1 min 8 s), it boasted a higher accuracy (98.70% vs 98.27%), as well as a higher recall, precision, and f1 score.
+Though my CNN model that leveraged FastText word embeddings took slightly more CPU time to train (3 min 23 s) compared to the simple Random Forest model (1 min 8 s), it boasted a higher accuracy (98.70% vs 98.24%), as well as a higher recall, precision, and f1 score.
 
 Below is a comparison of the two models:
 
-| Model | Feature Extraction Method | Training Time (CPU) | Accuracy | F1 Score | Recall | Precision |  
-| --- | --- | --- | --- | --- | --- | --- |
-| Random Forest| TF-IDF  | 1min 8s  | 98.27%   |  98.26%  | 98.27% | 98.25%  |
-| CNN | FastText Word Embeddings| 3min 30s | 98.70% | 98.70% | 98.72% | 98.69% |
+| Model         | Feature Extraction Method | Training Time (CPU) | Accuracy | F1 Score | Recall | Precision |  
+|---------------|---------------------------|---------------------|----------|----------|--------|-----------|
+| Random Forest | TF-IDF                    | 1min 8s             | 98.24%   | 98.24%   | 98.24% | 98.24%    |
+| CNN           | FastText Word Embeddings  | 3min 30s            | 98.70%   | 98.70%   | 98.72% | 98.69%    |

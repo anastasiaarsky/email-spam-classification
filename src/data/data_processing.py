@@ -1,4 +1,4 @@
-import data_collection
+from src.data import data_collection
 
 import os
 import re
@@ -15,7 +15,7 @@ cached_stopwords = set(stopwords.words("english"))
 def replace_url_email_number(text):
     # replaces URLs with the string 'url'
     text = re.sub(
-        r'https?:\/\/(www\.)?[-a-z0-9@:%._\+~#=]{1,256}\.[a-z0-9()]{1,6}\b([-a-z0-9()@:%_\+.~#?&//=]*)',
+        r'(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])',
         ' url ', text)
     # replaces emails with the string 'email'
     text = re.sub(r'\S*@\S*\s?', ' email ', text)
@@ -41,7 +41,7 @@ def exclude_unwanted_punctuation(text):
     return text.translate(translator)
 
 
-# Ensure that certain punctuation is recognized as its own token by added a space in front of it (Step 6)
+# Ensure that certain punctuation is recognized as its own token by added a space in front and behind of it (Step 6)
 # Important punctuation = . ! ? $
 # Input: string, Output: string
 def add_punctuation_token(text):
@@ -61,7 +61,7 @@ def exclude_stopwords(text):
 # Remove extra whitespaces and newlines (Step 8)
 # Input: string, Output: string
 def remove_extra_space(text):
-    text = re.sub(r'[\r|\n|\r\n]+', ' ', text)
+    text = re.sub(r'\n|\r', '', text)
     text = re.sub(r' +', ' ', text)
     return text
 
