@@ -4,7 +4,10 @@ This report will outline the results of my models throughout various stages in t
 
 ## Part 1: Results after the Reproduction of Available Solutions
 
-My goal at this stage was to research publicly available solutions for both the Enron Spam and Spam Assassin datasets, and reproduce their results. I settled on experimenting with a **Random Forest Classifier** and a **Recurrent Neural Network** (LSTM) model as those two models seemed to outperform any others for both datasets.
+My goal at this stage was to research publicly available solutions for both the Enron Spam and Spam Assassin datasets, and reproduce their results. 
+I settled on experimenting with a **Random Forest Classifier** and a **Recurrent Neural Network** (LSTM) model as those two models seemed to outperform any others for both datasets.
+
+The Jupyter Notebook containing the code can be found at: [`notebooks/ReproductionOfAvailableSolutions.ipynb`](https://github.com/anastasiaarsky/production_repo/blob/main/notebooks/ReproductionOfAvailableSolutions.ipynb).
 
 ### Results    
 
@@ -32,6 +35,8 @@ In this stage, I wanted to experiment with other ensemble methods and forms of f
 So far, I had tried TF-IDF Vectorization (on the word level) and a modified Bag of Words model, but I also wanted to consider TF-IDF Vectorization on the ngram and character levels, as well as Count Vectorization.
 
 I also wanted to explore boosting methods (specifically XGBoost), and compare the results to my previously used bagging method (Random Forest).
+
+The Jupyter Notebook containing the code can be found at: [`notebooks/ExperimentWithEnsembleModels.ipynb`](https://github.com/anastasiaarsky/production_repo/blob/main/notebooks/ExperimentWithEnsembleModels.ipynb).
 
 ### Results
 
@@ -77,6 +82,8 @@ Whereas simple RNNs only learn from the immediately preceding data, LSTMs keep t
 
 I also experimented with different feature extraction methods: a Continuous Bag of Words model, and the pretrained GloVe Word Embeddings. Leveraging pre-trained word embeddings is a form deep transfer learning, and is commonly used in NLP.
 
+The code can be found in Part 2 of the Jupyter Notebook: [`notebooks/Prototyping&Scaling.ipynb`](https://github.com/anastasiaarsky/production_repo/blob/main/notebooks/Prototyping%26Scaling.ipynb).
+
 ### Results
 
 After experimenting with different variations of my Bi-LSTM models (adding dropout layers, additional Bi-LSTM layers, playing around with learning rate, adding more epochs, hyperparameter tuning), these were the results for the highest performing models for each type of feature extraction:
@@ -101,6 +108,8 @@ To do this, I decided to implement a Convolutional Neural Network (CNN) in place
 CNNs are built for processing images, allowing them the capability of handling large amounts of data. This allows them to be considerably faster than BiLSTMs. They are also highly proficient in extracting meaningful patterns, which is ideal for spam detection.
 
 Once again, I analyzed a Continuous Bag of Words model and the pretrained GloVe Word Embeddings for my feature extraction. I also be used an additional deep transfer learning feature extraction approach by leveraging pretrained FastText word embeddings.
+
+The code can be found in Part 2 of the Jupyter Notebook: [`notebooks/Prototyping&Scaling.ipynb`](https://github.com/anastasiaarsky/production_repo/blob/main/notebooks/Prototyping%26Scaling.ipynb).
 
 ### Results:
 
