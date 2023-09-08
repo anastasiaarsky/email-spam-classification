@@ -63,7 +63,7 @@ def load_pretrained_embeddings(word_to_index, vocab_size, embed_size, path_to_em
     return embedding_matrix
 
 
-def glove(predict=False):
+def fasttext(predict=False):
     # Step 1: Load the processed data into a pandas dataframe and drop the (single) nan row
     df = pd.read_csv('data/processed_data.zip').dropna(subset='Text')
 
@@ -115,4 +115,4 @@ def glove(predict=False):
 
 
 if __name__ == "__main__":
-    glove()
+    fasttext()

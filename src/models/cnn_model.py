@@ -3,7 +3,7 @@ from keras.callbacks import EarlyStopping
 from keras.layers import Conv1D, Dense, GlobalMaxPooling1D
 from keras.models import Sequential, load_model
 
-from src.features import build_glove_features
+from src.features import build_fasttext_features
 from src.models import evaluation
 
 
@@ -16,7 +16,7 @@ def main():
     # Step 2: Train the CNN model or load the pretrained CNN model to make predictions
     if args.train:
         # Step A: Get the training and validation sets, as well as the embedding layer
-        X_train_vec, y_train, X_val_vec, y_val, embedding_layer = build_glove_features.glove()
+        X_train_vec, y_train, X_val_vec, y_val, embedding_layer = build_fasttext_features.fasttext()
 
         print('\nModel training in progress...')
         # Step B: Create a CNN model that uses the FastText word embeddings
@@ -43,7 +43,7 @@ def main():
 
     else:
         # Step A: Get the testing set
-        X_test_vec, y_test = build_glove_features.glove(predict=True)
+        X_test_vec, y_test = build_fasttext_features.fasttext(predict=True)
 
         print('\nModel prediction in progress...')
         # Step B: Load the pretrained model
