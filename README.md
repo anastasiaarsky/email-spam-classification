@@ -2,8 +2,7 @@
 
 This repository contains the code and resources for a spam classification capstone project that includes both a machine learning and a deep learning solution. 
 The project aims to compare the performance of these two techniques for accurately classifying email messages as spam or not spam. 
-
-Furthermore, the best-performing model will be deployed as a static web app on AWS to provide a user-friendly interface for email spam classification.
+It also contains a guide to deploy the best-performing model as a static web app on AWS to provide a user-friendly interface for email spam classification.
 
 ## Table of Contents
 - [Introduction](#introduction)
