@@ -55,12 +55,12 @@ To run this project, you'll need the following prerequisites:
 ### Installation
 1. Clone this repository to your local machine:
    ```bash
-   git clone https://github.com/anastasiaarsky/production_repo.git
+   git clone https://github.com/anastasiaarsky/email-spam-classification.git
    ```
 
 2. Navigate to the project directory:
     ```bash
-    cd production_repo
+    cd email-spam-classification
     ```
 
 3. Install the required Python libraries:
